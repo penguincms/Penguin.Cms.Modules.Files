@@ -1,0 +1,40 @@
+﻿@model FileBrowserPageModel
+
+@{
+	Layout = "_Layout";
+}
+
+<property style="padding: 40px; box-sizing: border-box;">
+
+    <property>
+        <name>Upload Files</name>
+        <value>
+            <form action="/Admin/File/Upload" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="FilePath" id="FilePath" value="@Model.FilePath" />
+                <input type="file" name="upload" id="upload" multiple>
+                <input type="submit" value="Upload" name="submit" onclick="Site.ShowLoader();">
+            </form>
+        </value>
+    </property>
+
+    <property>
+        <name>Upload Directory</name>
+        <value>
+            <form action="/Admin/File/Upload" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="FilePath" id="FilePath" value="@Model.FilePath" />
+                <input type="file" name="upload" id="upload" webkitdirectory mozdirectory>
+                <input type="submit" value="Upload" name="submit" onclick="Site.ShowLoader();">
+            </form>
+        </value>
+    </property>
+</property>
+
+<script>
+	function Ping() {
+
+	}
+
+	$('form input').click(function () {
+
+	});
+</script>

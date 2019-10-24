@@ -1,0 +1,12 @@
+﻿@model FileBrowserPageModel
+
+@{
+	Layout = "_Layout";
+}
+
+<form action="/Admin/File/CreateFolder" method="post">
+    <input type="hidden" name="FilePath" id="FilePath" value="@Model.FilePath" />
+    Enter a folder name:
+    <input type="text" name="FolderName" id="FolderName">
+    <input type="submit" value="Create" name="submit">
+</form>

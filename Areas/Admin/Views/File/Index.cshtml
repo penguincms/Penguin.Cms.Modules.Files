@@ -1,0 +1,133 @@
+﻿@model FileBrowserPageModel
+
+@{
+    Layout = "_Layout";
+
+    string CurrentPath = Model.FilePath.Replace(FileService.GetUserFilesRoot(), "").Replace("\\", "/");
+
+}
+
+@section head {
+    <style>
+        div#RightPane {
+            padding: 0px !important;
+        }
+    </style>
+}
+
+@section LeftPane {
+    <ul>
+        <li>
+            <a href="/Admin/File/Upload?FilePath=@Model.FilePath">
+                @Html.MaterialIcon("backup")
+                Upload
+            </a>
+            <a href="/Admin/File/CreateFolder?FilePath=@Model.FilePath">
+                @Html.MaterialIcon("folder")
+                Create Folder
+            </a>
+            <a href="/Admin/File/ImportImages?FilePath=@Model.FilePath">
+                @Html.MaterialIcon("folder")
+                Import Images
+            </a>
+            <a href="/Admin/File/Import?FilePath=@Model.FilePath">
+                @Html.MaterialIcon("folder")
+                Import Existing
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="FileBrowser">
+    <div class="FileNavigationBar">
+        @if (string.IsNullOrWhiteSpace(CurrentPath))
+        {
+        <input type="text" value="Files:/" readonly />
+        }
+        else
+        {
+        <input type="text" value="Files:@CurrentPath" readonly />
+        }
+    </div>
+    <div class="FileViewArea">
+        <table>
+            <tr>
+                <th></th>
+                <th>
+                    File Name
+                </th>
+                <th>
+                    File Size
+                </th>
+                <th>
+                    Date Modified
+                </th>
+                <th></th>
+            </tr>
+            @if (Model.FilePath.Replace(FileService.GetUserFilesRoot(), "") != "/")
+            {
+                string Path = CurrentPath.ToLast("/");
+
+                if (string.IsNullOrWhiteSpace(Path))
+                {
+                    Path = "/";
+                }
+
+            <tr>
+                <td></td>
+                <td><a href="/Admin/Files@(Path)">..</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            }
+            @foreach (DatabaseFile thisFile in Model.Files.Where(f => f.IsDirectory).OrderByDescending(f => f.FileName))
+            {
+                string Path = thisFile.FullName.Replace(FileService.GetUserFilesRoot(), "").Replace("\\", "/");
+            <tr>
+                <td>
+                    <a href="/Admin/Edit/@(typeof(DatabaseFile).FullName)/@thisFile._Id">
+                        @Html.MaterialIcon("settings")
+                    </a>
+                </td>
+
+                <td>
+                    <a href="/Admin/Files@(Path)">
+                        @thisFile.FileName
+                    </a>
+                </td>
+                <td>@*@thisFile.Length*@</td>
+                <td>@thisFile.DateModified</td>
+                <td>
+                    <a href="/Admin/File/Delete/@thisFile._Id">
+                        @Html.MaterialIcon("delete")
+                    </a>
+                </td>
+            </tr>
+
+            }
+            @foreach (DatabaseFile thisFile in Model.Files.Where(f => !f.IsDirectory).OrderByDescending(f => f.FileName))
+            {
+                string Path = thisFile.FullName.Replace(FileService.GetUserFilesRoot(), "").Replace("\\", "/");
+            <tr>
+                <td>
+                    <a href="/Admin/Edit/@(typeof(DatabaseFile).FullName)/@thisFile._Id">
+                        @Html.MaterialIcon("settings")
+                    </a>
+                </td>
+                <td>
+                    <a href="@(Path)">@thisFile.FileName</a>
+                </td>
+                <td>@thisFile.Length</td>
+                <td>@thisFile.DateModified</td>
+                <td>
+                    <a href="/Admin/File/Delete/@thisFile._Id">
+                        @Html.MaterialIcon("delete")
+                    </a>
+                </td>
+            </tr>
+
+            }
+        </table>
+    </div>
+</div>

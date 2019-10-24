@@ -1,0 +1,12 @@
+﻿@model List<string>
+@{
+	ViewBag.Title = "ReIndex";
+	Layout = "_Layout";
+}
+
+<h2>ReIndex</h2>
+
+@foreach (string thisLine in Model)
+{
+<p>@thisLine</p>
+}
