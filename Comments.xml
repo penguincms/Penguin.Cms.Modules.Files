@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Penguin.Cms.Modules.Files.Local</name>
+        <name>Penguin.Cms.Modules.Files</name>
     </assembly>
     <members>
     </members>
