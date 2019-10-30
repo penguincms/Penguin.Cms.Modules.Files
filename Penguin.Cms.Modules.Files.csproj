@@ -7,11 +7,13 @@
     <PackageProjectUrl>https://github.com/penguincms/Penguin.Cms.Modules.Files</PackageProjectUrl>
     <Version>1.0.0</Version>
     <Description>Not Available</Description>
+    <AssemblyName>Penguin.Cms.Modules.Files</AssemblyName>
+    <RootNamespace>Penguin.Cms.Modules.Files</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\**\*" />
-    <PackageReference Include="Penguin.Cms.Web.Files" Version="1.0.1-T9M1HHH" />
-    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="1.0.1-T9M1K2Y" />
+    <PackageReference Include="Penguin.Cms.Web.Files" Version="1.0.1-T9M2XAX" />
+    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="1.0.1-T9M2XAX" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
