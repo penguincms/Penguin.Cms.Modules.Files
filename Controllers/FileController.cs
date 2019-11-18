@@ -20,7 +20,7 @@ namespace Penguin.Cms.Modules.Files.Controllers
             FileService = fileService;
         }
 
-        public ActionResult Download(DatabaseFile thisFile)
+        private ActionResult Download(DatabaseFile thisFile)
         {
             if (thisFile is null)
             {
