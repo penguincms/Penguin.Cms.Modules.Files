@@ -5,6 +5,7 @@ using Penguin.Extensions.Strings;
 using Penguin.Files.Services;
 using Penguin.Web.Data;
 using System;
+using System.IO;
 
 namespace Penguin.Cms.Modules.Files.Controllers
 {
@@ -38,7 +39,14 @@ namespace Penguin.Cms.Modules.Files.Controllers
                 }
                 else
                 {
-                    return this.File(System.IO.File.ReadAllBytes(thisFile.FullName), MimeType);
+                    FileStream fileStream = new FileStream(thisFile.FullName, FileMode.Open, FileAccess.Read);
+
+                    FileStreamResult fsResult = new FileStreamResult(fileStream, MimeType);
+
+                    fsResult.EnableRangeProcessing = true;
+                    fsResult.FileDownloadName = Path.GetFileName(thisFile.FullName);
+
+                    return fsResult;
                 }
             }
             else
