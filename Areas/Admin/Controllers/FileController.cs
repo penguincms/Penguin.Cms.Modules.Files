@@ -257,14 +257,9 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
         [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
         public ActionResult ViewByPath(string Path)
         {
-            if (Path is null)
-            {
-                throw new ArgumentNullException(nameof(Path));
-            }
-
             if (string.IsNullOrWhiteSpace(Path))
             {
-                throw new ArgumentException(PATH_EMPTY_MESSAGE, nameof(Path));
+                Path = "/";
             }
 
             if (Path.StartsWith("/", StringComparison.OrdinalIgnoreCase))
