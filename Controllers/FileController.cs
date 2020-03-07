@@ -17,8 +17,40 @@ namespace Penguin.Cms.Modules.Files.Controllers
 
         public FileController(DatabaseFileRepository databaseFileRepository, FileService fileService)
         {
-            DatabaseFileRepository = databaseFileRepository;
-            FileService = fileService;
+            this.DatabaseFileRepository = databaseFileRepository;
+            this.FileService = fileService;
+        }
+
+        public ActionResult Download(int Id)
+        {
+            return this.Download(this.DatabaseFileRepository.Find(Id) ?? throw new NullReferenceException($"No DatabaseFile found with Id {Id}"));
+        }
+
+        public ActionResult ViewByPath(string Path)
+        {
+            if (Path is null)
+            {
+                throw new ArgumentNullException(nameof(Path));
+            }
+
+            Path = Path.Replace('/', '\\');
+
+            string FullName = System.IO.Path.Combine((this.FileService as FileService).GetUserFilesRoot(), Path);
+
+            DatabaseFile thisFile = this.DatabaseFileRepository.GetByFullName(FullName);
+
+            if (thisFile is null)
+            {
+                return this.NotFound();
+            }
+            if (!thisFile.IsDirectory)
+            {
+                return this.Download(thisFile);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         private ActionResult Download(DatabaseFile thisFile)
@@ -41,10 +73,11 @@ namespace Penguin.Cms.Modules.Files.Controllers
                 {
                     FileStream fileStream = new FileStream(thisFile.FullName, FileMode.Open, FileAccess.Read);
 
-                    FileStreamResult fsResult = new FileStreamResult(fileStream, MimeType);
-
-                    fsResult.EnableRangeProcessing = true;
-                    fsResult.FileDownloadName = Path.GetFileName(thisFile.FullName);
+                    FileStreamResult fsResult = new FileStreamResult(fileStream, MimeType)
+                    {
+                        EnableRangeProcessing = true,
+                        FileDownloadName = Path.GetFileName(thisFile.FullName)
+                    };
 
                     return fsResult;
                 }
@@ -52,35 +85,6 @@ namespace Penguin.Cms.Modules.Files.Controllers
             else
             {
                 return this.File(thisFile.Data, MimeType, thisFile.FileName);
-            }
-        }
-
-        public ActionResult Download(int Id) => this.Download(this.DatabaseFileRepository.Find(Id) ?? throw new NullReferenceException($"No DatabaseFile found with Id {Id}"));
-
-        public ActionResult ViewByPath(string Path)
-        {
-            if (Path is null)
-            {
-                throw new ArgumentNullException(nameof(Path));
-            }
-
-            Path = Path.Replace('/', '\\');
-
-            string FullName = System.IO.Path.Combine((FileService as FileService).GetUserFilesRoot(), Path);
-
-            DatabaseFile thisFile = this.DatabaseFileRepository.GetByFullName(FullName);
-
-            if (thisFile is null)
-            {
-                return NotFound();
-            }
-            if (!thisFile.IsDirectory)
-            {
-                return this.Download(thisFile);
-            }
-            else
-            {
-                throw new UnauthorizedAccessException();
             }
         }
     }

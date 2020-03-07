@@ -1,7 +1,7 @@
 ﻿namespace Penguin.Cms.Modules.Files.Constants.Strings
 {
-    public class RoleNames
+    public static class RoleNames
     {
-        public const string FileManager = "File Manager";
+        public const string FILE_MANAGER = "File Manager";
     }
 }

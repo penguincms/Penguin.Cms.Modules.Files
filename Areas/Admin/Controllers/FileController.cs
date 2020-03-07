@@ -25,6 +25,21 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 {
     public class FileController : ObjectManagementController<DatabaseFile>
     {
+
+        protected IProvideConfigurations ConfigurationService { get; set; }
+
+        protected DatabaseFileRepository DatabaseFileRepository { get; set; }
+
+        protected IRepository<AuditableError> ErrorRepository { get; set; }
+
+        protected FileService FileService { get; set; }
+
+        protected MessageBus MessageBus { get; set; }
+
+        protected ISecurityProvider<DatabaseFile>? SecurityProvider { get; set; }
+
+        protected IUserSession UserSession { get; set; }
+
         protected class FileUpload
         {
             [SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
@@ -34,29 +49,20 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
             public FileUpload(byte[] data, string path)
             {
-                Data = data;
-                Path = path;
+                this.Data = data;
+                this.Path = path;
             }
         }
 
-        protected IProvideConfigurations ConfigurationService { get; set; }
-        protected DatabaseFileRepository DatabaseFileRepository { get; set; }
-        protected IRepository<AuditableError> ErrorRepository { get; set; }
-        protected FileService FileService { get; set; }
-        protected MessageBus MessageBus { get; set; }
-        protected ISecurityProvider<DatabaseFile>? SecurityProvider { get; set; }
-        protected IUserSession UserSession { get; set; }
-        private const string PATH_EMPTY_MESSAGE = "Path can not be null or whitespace";
-
         public FileController(IUserSession userSession, DatabaseFileRepository databaseFileRepository, IRepository<AuditableError> errorRepository, IProvideConfigurations configurationService, IServiceProvider serviceProvider, FileService fileService, MessageBus messageBus, ISecurityProvider<DatabaseFile> securityProvider = null) : base(serviceProvider)
         {
-            SecurityProvider = securityProvider;
-            UserSession = userSession;
-            DatabaseFileRepository = databaseFileRepository;
-            ConfigurationService = configurationService;
-            ErrorRepository = errorRepository;
-            MessageBus = messageBus;
-            FileService = fileService;
+            this.SecurityProvider = securityProvider;
+            this.UserSession = userSession;
+            this.DatabaseFileRepository = databaseFileRepository;
+            this.ConfigurationService = configurationService;
+            this.ErrorRepository = errorRepository;
+            this.MessageBus = messageBus;
+            this.FileService = fileService;
         }
 
         [HttpGet]
@@ -66,7 +72,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
             if (string.IsNullOrWhiteSpace(FilePath))
             {
-                FilePath = FileService.GetUserHome();
+                FilePath = this.FileService.GetUserHome();
             }
 
             model.FilePath = FilePath;
@@ -79,7 +85,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
         {
             DatabaseFile thisFile;
 
-            using (IWriteContext context = DatabaseFileRepository.WriteContext())
+            using (IWriteContext context = this.DatabaseFileRepository.WriteContext())
             {
                 thisFile = this.DatabaseFileRepository.GetByFullName(Path.Combine(FilePath, FolderName));
 
@@ -100,16 +106,16 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
                 this.DatabaseFileRepository.AddOrUpdate(thisFile);
             }
 
-            return this.RedirectToAction(nameof(Index), new { Id = thisFile.FullName.Remove(FileService.GetUserFilesRoot()).Replace("\\", "/", StringComparison.OrdinalIgnoreCase) });
+            return this.RedirectToAction(nameof(Index), new { Id = thisFile.FullName.Remove(this.FileService.GetUserFilesRoot()).Replace("\\", "/", StringComparison.OrdinalIgnoreCase) });
         }
 
         public ActionResult Delete(int Id)
         {
-            using (IWriteContext context = DatabaseFileRepository.WriteContext())
+            using (IWriteContext context = this.DatabaseFileRepository.WriteContext())
             {
                 DatabaseFile thisFile = this.DatabaseFileRepository.Find(Id) ?? throw new NullReferenceException($"Can not find file with id {Id}");
 
-                if (!SecurityProvider.CheckAccess(thisFile, PermissionTypes.Write))
+                if (!this.SecurityProvider.CheckAccess(thisFile, PermissionTypes.Write))
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -127,7 +133,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(thisFile));
             }
 
-            if (!SecurityProvider.CheckAccess(thisFile, PermissionTypes.Read))
+            if (!this.SecurityProvider.CheckAccess(thisFile, PermissionTypes.Read))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -159,10 +165,10 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
             foreach (string thisFile in Files)
             {
-                if (DatabaseFileRepository.GetByFullName(thisFile) is null)
+                if (this.DatabaseFileRepository.GetByFullName(thisFile) is null)
                 {
                     output.Add($"Uploaded file {thisFile}");
-                    Upload(new List<FileUpload>() { new FileUpload(System.IO.File.ReadAllBytes(thisFile), thisFile) }, Public);
+                    this.Upload(new List<FileUpload>() { new FileUpload(System.IO.File.ReadAllBytes(thisFile), thisFile) }, Public);
                 }
                 else
                 {
@@ -173,7 +179,10 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
             return this.View("IndexOutput", output);
         }
 
-        public override IActionResult Index(string Id = "") => this.View(this.ModelForPath(Id));
+        public override IActionResult Index(string Id = "")
+        {
+            return this.View(this.ModelForPath(Id));
+        }
 
         [HttpGet]
         public ActionResult Upload(string FilePath = "")
@@ -182,7 +191,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
             if (string.IsNullOrWhiteSpace(FilePath))
             {
-                FilePath = FileService.GetUserHome();
+                FilePath = this.FileService.GetUserHome();
             }
 
             model.FilePath = FilePath;
@@ -206,7 +215,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
                 if (string.IsNullOrWhiteSpace(FilePath))
                 {
-                    FilePath = FileService.GetUserHome();
+                    FilePath = this.FileService.GetUserHome();
                 }
 
                 if (thisUpload != null)
@@ -221,7 +230,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
             this.Upload(Files, Public);
 
-            return this.RedirectToAction(nameof(Index), new { Id = FilePath.Remove(FileService.GetUserFilesRoot()).Replace("\\", "/", StringComparison.Ordinal).Trim('/') });
+            return this.RedirectToAction(nameof(Index), new { Id = FilePath.Remove(this.FileService.GetUserFilesRoot()).Replace("\\", "/", StringComparison.Ordinal).Trim('/') });
         }
 
         public ActionResult UploadAjax(List<IFormFile> upload, bool Public = true)
@@ -239,7 +248,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
                 using BinaryReader binaryReader = new BinaryReader(thisUpload.OpenReadStream());
 
-                string FilePath = Path.Combine(FileService.GetUserFilesRoot(), "Ajax");
+                string FilePath = Path.Combine(this.FileService.GetUserFilesRoot(), "Ajax");
 
                 if (thisUpload != null)
                 {
@@ -251,7 +260,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
             List<DatabaseFile> uploaded = this.Upload(Files, Public);
 
-            return Json(new { files = uploaded.Select(d => new { Id = d._Id, d.ExternalId }) });
+            return this.Json(new { files = uploaded.Select(d => new { Id = d._Id, d.ExternalId }) });
         }
 
         [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
@@ -269,7 +278,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
             Path = Path.Replace("/", "\\", StringComparison.Ordinal);
 
-            string FullName = System.IO.Path.Combine(FileService.GetUserFilesRoot(), Path ?? "");
+            string FullName = System.IO.Path.Combine(this.FileService.GetUserFilesRoot(), Path ?? "");
 
             DatabaseFile thisFile = this.DatabaseFileRepository.GetByFullName(FullName);
 
@@ -287,11 +296,11 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
         {
             if (string.IsNullOrWhiteSpace(FilePath))
             {
-                FilePath = FileService.GetUserHome();
+                FilePath = this.FileService.GetUserHome();
             }
             else
             {
-                FilePath = Path.Combine(FileService.GetUserFilesRoot(), FilePath);
+                FilePath = Path.Combine(this.FileService.GetUserFilesRoot(), FilePath);
             }
             FileBrowserPageModel model = new FileBrowserPageModel(this.DatabaseFileRepository.GetByPath(FilePath))
             {
@@ -306,11 +315,11 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
         {
             List<DatabaseFile> Imports = new List<DatabaseFile>();
 
-            bool StoreFilesInDatabase = ConfigurationService.GetBool(ConfigurationNames.STORE_FILES_IN_DATABASE);
+            bool StoreFilesInDatabase = this.ConfigurationService.GetBool(ConfigurationNames.STORE_FILES_IN_DATABASE);
 
             List<DatabaseFile> Uploaded = new List<DatabaseFile>();
 
-            using (IWriteContext context = DatabaseFileRepository.WriteContext())
+            using (IWriteContext context = this.DatabaseFileRepository.WriteContext())
             {
                 //Prevent containing directories from being created multiple times
                 List<DatabaseFile> CachedDirs = new List<DatabaseFile>();
@@ -323,7 +332,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
                     if (thisFile != null && !thisFile.IsDeleted)
                     {
-                        if (!SecurityProvider.CheckAccess(thisFile, PermissionTypes.Write))
+                        if (!this.SecurityProvider.CheckAccess(thisFile, PermissionTypes.Write))
                         {
                             throw new UnauthorizedAccessException();
                         }
@@ -349,13 +358,13 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
                     if (Public)
                     {
-                        SecurityProvider?.SetPublic(thisFile);
+                        this.SecurityProvider?.SetPublic(thisFile);
                     }
 
                     this.DatabaseFileRepository.AddOrUpdate(thisFile);
 
                     DirectoryInfo thisDir = new FileInfo(thisFile.FullName).Directory;
-                    DirectoryInfo rootDir = new DirectoryInfo(FileService.GetUserFilesRoot());
+                    DirectoryInfo rootDir = new DirectoryInfo(this.FileService.GetUserFilesRoot());
 
                     DatabaseFile thisDataDir = this.DatabaseFileRepository.GetByFullName(thisDir.FullName) ?? CachedDirs.FirstOrDefault(d => d.FullName == thisDir.FullName);
 
