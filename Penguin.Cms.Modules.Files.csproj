@@ -14,8 +14,8 @@
   <ItemGroup>
     <Content Remove="wwwroot\**\*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.1" />
-    <PackageReference Include="Penguin.Cms.Web.Files" Version="1.0.1-T9SAD4U" />
-    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="1.0.1-T9SAD4U" />
+    <PackageReference Include="Penguin.Cms.Web.Files" Version="1.0.1-T9SPWN8" />
+    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="1.0.1-T9SPWN8" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
