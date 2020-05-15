@@ -25,7 +25,6 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 {
     public class FileController : ObjectManagementController<DatabaseFile>
     {
-
         protected IProvideConfigurations ConfigurationService { get; set; }
 
         protected DatabaseFileRepository DatabaseFileRepository { get; set; }
@@ -54,7 +53,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
             }
         }
 
-        public FileController(IUserSession userSession, DatabaseFileRepository databaseFileRepository, IRepository<AuditableError> errorRepository, IProvideConfigurations configurationService, IServiceProvider serviceProvider, FileService fileService, MessageBus messageBus, ISecurityProvider<DatabaseFile> securityProvider = null) : base(serviceProvider)
+        public FileController(IUserSession userSession, DatabaseFileRepository databaseFileRepository, IRepository<AuditableError> errorRepository, IProvideConfigurations configurationService, IServiceProvider serviceProvider, FileService fileService, MessageBus messageBus, ISecurityProvider<DatabaseFile>? securityProvider = null) : base(serviceProvider)
         {
             this.SecurityProvider = securityProvider;
             this.UserSession = userSession;

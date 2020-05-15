@@ -26,7 +26,7 @@ namespace Penguin.Cms.Modules.Files.ComponentProviders
                         Permissions = new List<ISecurityGroupPermission>()
                         {
                             this.CreatePermission(RoleNames.FILE_MANAGER, PermissionTypes.Read),
-                            this.CreatePermission(SecurityRoles.SysAdmin, PermissionTypes.Read | PermissionTypes.Write)
+                            this.CreatePermission(SecurityRoles.SYS_ADMIN, PermissionTypes.Read | PermissionTypes.Write)
                         }
                     }
                 }
