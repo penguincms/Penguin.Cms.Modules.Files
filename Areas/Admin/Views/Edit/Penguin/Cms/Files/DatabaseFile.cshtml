@@ -9,14 +9,14 @@
     string ID = Guid.NewGuid().ToString();
     string FileId = $"{ID}_File";
     string ButtonId = $"{ID}_Button";
-    string ExistingPath = Model[nameof(DatabaseFile.FullName)].Value;
+    string ExistingPath = Model[nameof(DatabaseFile.FullName)]?.Value;
 
 }
 
 <div id="@ID" class="fileUploader">
     @if (ExistingPath != null && MimeMappings.GetType(System.IO.Path.GetExtension(ExistingPath)) == MimeMappings.FileType.Image)
     {
-    <img src="/File/Download/@Model[nameof(DatabaseFile._Id)].Value" />
+        <img src="/File/Download/@Model[nameof(DatabaseFile._Id)].Value" />
     }
 
     <partial name="~/Areas/Admin/Views/Edit/@@Entity.cshtml" model="@Model" />
