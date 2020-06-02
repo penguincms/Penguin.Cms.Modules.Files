@@ -6,14 +6,11 @@
 
 @{
     Layout = null;
-    string ID = Guid.NewGuid().ToString();
-    string FileId = $"{ID}_File";
-    string ButtonId = $"{ID}_Button";
     string ExistingPath = Model[nameof(DatabaseFile.FullName)]?.Value;
 
 }
 
-<div id="@ID" class="fileUploader">
+<div class="fileUploader databaseFileUploader" data-handled="false">
     @if (ExistingPath != null && MimeMappings.GetType(System.IO.Path.GetExtension(ExistingPath)) == MimeMappings.FileType.Image)
     {
         <img src="/File/Download/@Model[nameof(DatabaseFile._Id)].Value" />
@@ -21,45 +18,62 @@
 
     <partial name="~/Areas/Admin/Views/Edit/@@Entity.cshtml" model="@Model" />
     <div>
-        <input ID="@FileId" name="file" type="file" data-ignored="true" style="width: 49%;" />
-        <input ID="@ButtonId" type="button" value="Upload" data-ignored="true" style="width: 49%; cursor: pointer;" />
+        <input name="file" type="file" data-ignored="true" style="width: 49%;" />
+        <input type="button" value="Upload" data-ignored="true" style="width: 49%; cursor: pointer;" />
     </div>
-    <script>
-        $('#@ButtonId:enabled').click(function (e) {
-
-            $('#@ButtonId').attr('value', 'uploading...');
-            $('#@ButtonId').attr('disabled', true);
-
-            var input = document.getElementById('@FileId');
-            var files = input.files;
-            var formData = new FormData();
-
-            for (var i = 0; i != files.length; i++) {
-              formData.append("upload", files[i]);
-             }
-
-            $.ajax(
-              {
-                  url: "/Admin/File/UploadAjax",
-                  data: formData,
-                  processData: false,
-                  contentType: false,
-                  type: "POST",
-                    success: function (data) {
-                        var file = data.files[0];
-
-                        if (!$('#@ID label').length) {
-                            $($('#@ID template').html()).appendTo('#@ID .selectorValues');
-                        }
-
-                        $('#@ButtonId').attr('value', 'Upload');
-                        $('#@ButtonId').attr('disabled', false);
-                        $('#@ID label').html(file.externalId);
-                        $('#@ID input[type="hidden"]').val(file.id);
-                  }
-              }
-            );
-
-        });
-    </script>
 </div>
+
+<script>
+    var DatabaseFileUploader = DatabaseFileUploader || {};
+
+    DatabaseFileUploader.Setup = DatabaseFileUploader.Setup || function () {
+        $('.databaseFileUploader[data-handled="false"]').each(function (i, e) {
+            var dbFileUploader = $(e);
+
+            dbFileUploader.find('input[type="button"]').click(function (b) {
+                var button = $(b.target);
+
+                if (button.is(":disabled")) {
+                    return;
+                }
+
+                button.attr('value', 'uploading...');
+                button.attr('disabled', true);
+
+                var input = dbFileUploader.find('input[type="file"]')[0];
+                var files = input.files;
+                var formData = new FormData();
+
+                for (var i = 0; i != files.length; i++) {
+                    formData.append("upload", files[i]);
+                }
+
+                $.ajax(
+                    {
+                        url: "/Admin/File/UploadAjax",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        type: "POST",
+                        success: function (data) {
+                            var file = data.files[0];
+
+                            if (!dbFileUploader.find('label').length) {
+                                dbFileUploader.find('.selectorValues').append(dbFileUploader.find('template').html());
+                            }
+
+                            button.attr('value', 'Upload');
+                            button.attr('disabled', false);
+                            dbFileUploader.find('label').html(file.externalId);
+                            dbFileUploader.find('input[type="hidden"]').val(file.id);
+                        }
+                    }
+                );
+            })
+
+            dbFileUploader.attr('data-handled', 'true');
+        })
+    }
+
+    DatabaseFileUploader.Setup();
+</script>
