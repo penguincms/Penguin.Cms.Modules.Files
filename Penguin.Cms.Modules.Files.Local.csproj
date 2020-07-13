@@ -11,6 +11,10 @@
     <RootNamespace>Penguin.Cms.Modules.Files</RootNamespace>
     <DocumentationFile>Penguin.Cms.Modules.Files.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>CS0108; CS3021; CS1587; CS2208; CA1062</WarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\**\*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.1" />
@@ -40,6 +44,8 @@
     <ProjectReference Include="..\Penguin.Extensions.String\Penguin.Extensions.String.Local.csproj" />
     <ProjectReference Include="..\Penguin.Files\Penguin.Files.Local.csproj" />
     <ProjectReference Include="..\Penguin.Files.Abstractions\Penguin.Files.Abstractions.Local.csproj" />
+    <ProjectReference Include="..\Penguin.Json\Penguin.Json.Local.csproj" />
+    <ProjectReference Include="..\Penguin.Json.Abstractions\Penguin.Json.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Messaging.Abstractions\Penguin.Messaging.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Messaging.Application\Penguin.Messaging.Application.Local.csproj" />
     <ProjectReference Include="..\Penguin.Messaging.Core\Penguin.Messaging.Core.Local.csproj" />
@@ -56,6 +62,7 @@
     <ProjectReference Include="..\Penguin.Reflection.Serialization.Extensions\Penguin.Reflection.Serialization.Extensions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Security.Abstractions\Penguin.Security.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Shared.Objects\Penguin.Shared.Objects.Local.csproj" />
+    <ProjectReference Include="..\Penguin.SystemExtensions.Abstractions\Penguin.SystemExtensions.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Templating.Abstractions\Penguin.Templating.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Testing\Penguin.Testing.Local.csproj" />
     <ProjectReference Include="..\Penguin.Threading.BackgroundWorker\Penguin.Threading.BackgroundWorker.Local.csproj" />
