@@ -25,20 +25,6 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 {
     public class FileController : ObjectManagementController<DatabaseFile>
     {
-        protected IProvideConfigurations ConfigurationService { get; set; }
-
-        protected DatabaseFileRepository DatabaseFileRepository { get; set; }
-
-        protected IRepository<AuditableError> ErrorRepository { get; set; }
-
-        protected FileService FileService { get; set; }
-
-        protected MessageBus MessageBus { get; set; }
-
-        protected ISecurityProvider<DatabaseFile>? SecurityProvider { get; set; }
-
-        protected IUserSession UserSession { get; set; }
-
         protected class FileUpload
         {
             [SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
@@ -52,6 +38,18 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
                 this.Path = path;
             }
         }
+
+        protected IProvideConfigurations ConfigurationService { get; set; }
+
+        protected DatabaseFileRepository DatabaseFileRepository { get; set; }
+
+        protected IRepository<AuditableError> ErrorRepository { get; set; }
+
+        protected FileService FileService { get; set; }
+
+        protected MessageBus MessageBus { get; set; }
+
+        protected ISecurityProvider<DatabaseFile>? SecurityProvider { get; set; }
 
         public FileController(IUserSession userSession, DatabaseFileRepository databaseFileRepository, IRepository<AuditableError> errorRepository, IProvideConfigurations configurationService, IServiceProvider serviceProvider, FileService fileService, MessageBus messageBus, ISecurityProvider<DatabaseFile>? securityProvider = null) : base(serviceProvider, userSession)
         {

@@ -25,8 +25,8 @@ namespace Penguin.Cms.Modules.Files.ComponentProviders
                         Href = "/Admin/File",
                         Permissions = new List<ISecurityGroupPermission>()
                         {
-                            this.CreatePermission(RoleNames.FILE_MANAGER, PermissionTypes.Read),
-                            this.CreatePermission(SecurityRoles.SYS_ADMIN, PermissionTypes.Read | PermissionTypes.Write)
+                            CreatePermission(RoleNames.FILE_MANAGER, PermissionTypes.Read),
+                            CreatePermission(SecurityRoles.SYS_ADMIN, PermissionTypes.Read | PermissionTypes.Write)
                         }
                     }
                 }
