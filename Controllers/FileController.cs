@@ -35,7 +35,7 @@ namespace Penguin.Cms.Modules.Files.Controllers
 
             Path = Path.Replace('/', '\\');
 
-            string FullName = System.IO.Path.Combine((this.FileService as FileService).GetUserFilesRoot(), Path);
+            string FullName = System.IO.Path.Combine(this.FileService.GetUserFilesRoot(), Path);
 
             DatabaseFile thisFile = this.DatabaseFileRepository.GetByFullName(FullName);
 

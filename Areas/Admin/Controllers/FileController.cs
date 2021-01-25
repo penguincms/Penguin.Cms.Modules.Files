@@ -259,7 +259,6 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
             return this.Json(new { files = uploaded.Select(d => new { Id = d._Id, d.ExternalId }) });
         }
 
-        [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
         public ActionResult ViewByPath(string Path)
         {
             if (string.IsNullOrWhiteSpace(Path))
@@ -267,9 +266,9 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
                 Path = "/";
             }
 
-            if (Path.StartsWith("/", StringComparison.OrdinalIgnoreCase))
+            if (Path.StartsWith('/'))
             {
-                Path = Path.Substring(1);
+                Path = Path[1..];
             }
 
             Path = Path.Replace("/", "\\", StringComparison.Ordinal);
@@ -306,7 +305,6 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
             return model;
         }
 
-        [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
         private List<DatabaseFile> Upload(List<FileUpload> upload, bool Public = false)
         {
             List<DatabaseFile> Imports = new List<DatabaseFile>();
