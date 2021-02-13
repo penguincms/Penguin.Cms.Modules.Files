@@ -11,10 +11,6 @@
     <RootNamespace>Penguin.Cms.Modules.Files</RootNamespace>
     <DocumentationFile>Penguin.Cms.Modules.Files.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors>CS0108; CS3021; CS1587; CS2208; CA1062</WarningsAsErrors>
-  </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\**\*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.1" />
