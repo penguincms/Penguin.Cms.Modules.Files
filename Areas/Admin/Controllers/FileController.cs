@@ -27,7 +27,6 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
     {
         protected class FileUpload
         {
-            [SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
             public byte[] Data { get; set; }
 
             public string Path { get; set; }
@@ -53,7 +52,8 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
 
         public FileController(IUserSession userSession, DatabaseFileRepository databaseFileRepository, IRepository<AuditableError> errorRepository, IProvideConfigurations configurationService, IServiceProvider serviceProvider, FileService fileService, MessageBus messageBus, ISecurityProvider<DatabaseFile>? securityProvider = null) : base(serviceProvider, userSession)
         {
-            this.SecurityProvider = securityProvider; ;
+            this.SecurityProvider = securityProvider;
+            ;
             this.DatabaseFileRepository = databaseFileRepository;
             this.ConfigurationService = configurationService;
             this.ErrorRepository = errorRepository;

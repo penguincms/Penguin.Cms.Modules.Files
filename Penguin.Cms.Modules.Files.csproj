@@ -4,7 +4,7 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Nullable>enable</Nullable>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-    <PackageProjectUrl>https://github.com/penguincms/Penguin.Cms.Modules.Files</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/PenguinCMS/Penguin.Cms.Modules.Files</PackageProjectUrl>
     <Version>5.0.5</Version>
     <Description>Not Available</Description>
     <AssemblyName>Penguin.Cms.Modules.Files</AssemblyName>
@@ -14,8 +14,8 @@
   <ItemGroup>
     <Content Remove="wwwroot\**\*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.1" />
-    <PackageReference Include="Penguin.Cms.Web.Files" Version="5.0.6-TAEO1KM" />
-    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="5.0.6-TAEO1KM" />
+    <PackageReference Include="Penguin.Cms.Web.Files" Version="5.0.6-TAHULSY" />
+    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="5.0.6-TAHULSY" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
