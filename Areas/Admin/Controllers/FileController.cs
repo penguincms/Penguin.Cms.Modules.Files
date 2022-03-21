@@ -17,7 +17,6 @@ using Penguin.Security.Abstractions.Interfaces;
 using Penguin.Web.Data;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -175,10 +174,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
             return this.View("IndexOutput", output);
         }
 
-        public override IActionResult Index(string Id = "")
-        {
-            return this.View(this.ModelForPath(Id));
-        }
+        public override IActionResult Index(string Id = "") => this.View(this.ModelForPath(Id));
 
         [HttpGet]
         public ActionResult Upload(string FilePath = "")
