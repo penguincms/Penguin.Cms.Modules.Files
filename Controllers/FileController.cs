@@ -21,10 +21,7 @@ namespace Penguin.Cms.Modules.Files.Controllers
             this.FileService = fileService;
         }
 
-        public ActionResult Download(int Id)
-        {
-            return this.Download(this.DatabaseFileRepository.Find(Id) ?? throw new NullReferenceException($"No DatabaseFile found with Id {Id}"));
-        }
+        public ActionResult Download(int Id) => this.Download(this.DatabaseFileRepository.Find(Id) ?? throw new NullReferenceException($"No DatabaseFile found with Id {Id}"));
 
         public ActionResult ViewByPath(string Path)
         {
