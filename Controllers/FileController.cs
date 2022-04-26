@@ -60,7 +60,7 @@ namespace Penguin.Cms.Modules.Files.Controllers
             string Extension = thisFile.FileName.FromLast(".");
             string MimeType = MimeMappings.GetMimeType(Extension);
 
-            if (thisFile.Data.Length == 0)
+            if ((thisFile.Data?.Length ?? 0) == 0)
             {
                 if (MimeType.StartsWith("text/", StringComparison.OrdinalIgnoreCase))
                 {
