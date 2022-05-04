@@ -8,13 +8,13 @@ namespace Penguin.Cms.Modules.Files
     {
         public void RegisterRoutes(IRouteBuilder routes)
         {
-            routes.MapRoute(
+            _ = routes.MapRoute(
                 name: "Client_Files",
                 template: "Files/{*Path}",
                 defaults: new { controller = "File", action = "ViewByPath" }
             );
 
-            routes.MapRoute(
+            _ = routes.MapRoute(
                 "Admin_Files",
                 "{area:exists}/Files/{*Path}",
                 new { controller = "File", action = "ViewByPath" }

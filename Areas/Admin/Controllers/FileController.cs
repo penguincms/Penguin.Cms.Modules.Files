@@ -8,7 +8,7 @@ using Penguin.Cms.Modules.Files.Areas.Admin.Models;
 using Penguin.Cms.Modules.Files.Constants.Strings;
 using Penguin.Configuration.Abstractions.Extensions;
 using Penguin.Configuration.Abstractions.Interfaces;
-using Penguin.Extensions.Strings;
+using Penguin.Extensions.String;
 using Penguin.Files.Services;
 using Penguin.Messaging.Core;
 using Penguin.Persistence.Abstractions.Interfaces;
@@ -163,7 +163,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
                 if (this.DatabaseFileRepository.GetByFullName(thisFile) is null)
                 {
                     output.Add($"Uploaded file {thisFile}");
-                    this.Upload(new List<FileUpload>() { new FileUpload(System.IO.File.ReadAllBytes(thisFile), thisFile) }, Public);
+                    _ = this.Upload(new List<FileUpload>() { new FileUpload(System.IO.File.ReadAllBytes(thisFile), thisFile) }, Public);
                 }
                 else
                 {
@@ -174,7 +174,10 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
             return this.View("IndexOutput", output);
         }
 
-        public override IActionResult Index(string Id = "") => this.View(this.ModelForPath(Id));
+        public override IActionResult Index(string Id = "")
+        {
+            return this.View(this.ModelForPath(Id));
+        }
 
         [HttpGet]
         public ActionResult Upload(string FilePath = "")
@@ -220,7 +223,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Controllers
                 }
             }
 
-            this.Upload(Files, Public);
+            _ = this.Upload(Files, Public);
 
             return this.RedirectToAction(nameof(Index), new { Id = FilePath.Remove(this.FileService.GetUserFilesRoot()).Replace("\\", "/", StringComparison.Ordinal).Trim('/') });
         }
