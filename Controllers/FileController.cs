@@ -17,13 +17,13 @@ namespace Penguin.Cms.Modules.Files.Controllers
 
         public FileController(DatabaseFileRepository databaseFileRepository, FileService fileService)
         {
-            this.DatabaseFileRepository = databaseFileRepository;
-            this.FileService = fileService;
+            DatabaseFileRepository = databaseFileRepository;
+            FileService = fileService;
         }
 
         public ActionResult Download(int Id)
         {
-            return this.Download(this.DatabaseFileRepository.Find(Id) ?? throw new NullReferenceException($"No DatabaseFile found with Id {Id}"));
+            return Download(DatabaseFileRepository.Find(Id) ?? throw new NullReferenceException($"No DatabaseFile found with Id {Id}"));
         }
 
         public ActionResult ViewByPath(string Path)
@@ -35,22 +35,11 @@ namespace Penguin.Cms.Modules.Files.Controllers
 
             Path = Path.Replace('/', '\\');
 
-            string FullName = System.IO.Path.Combine(this.FileService.GetUserFilesRoot(), Path);
+            string FullName = System.IO.Path.Combine(FileService.GetUserFilesRoot(), Path);
 
-            DatabaseFile thisFile = this.DatabaseFileRepository.GetByFullName(FullName);
+            DatabaseFile thisFile = DatabaseFileRepository.GetByFullName(FullName);
 
-            if (thisFile is null)
-            {
-                return this.NotFound();
-            }
-            if (!thisFile.IsDirectory)
-            {
-                return this.Download(thisFile);
-            }
-            else
-            {
-                throw new UnauthorizedAccessException();
-            }
+            return thisFile is null ? NotFound() : !thisFile.IsDirectory ? Download(thisFile) : throw new UnauthorizedAccessException();
         }
 
         private ActionResult Download(DatabaseFile thisFile)
@@ -67,13 +56,13 @@ namespace Penguin.Cms.Modules.Files.Controllers
             {
                 if (MimeType.StartsWith("text/", StringComparison.OrdinalIgnoreCase))
                 {
-                    return this.Content(System.IO.File.ReadAllText(thisFile.FullName));
+                    return Content(System.IO.File.ReadAllText(thisFile.FullName));
                 }
                 else
                 {
-                    FileStream fileStream = new FileStream(thisFile.FullName, FileMode.Open, FileAccess.Read);
+                    FileStream fileStream = new(thisFile.FullName, FileMode.Open, FileAccess.Read);
 
-                    FileStreamResult fsResult = new FileStreamResult(fileStream, MimeType)
+                    FileStreamResult fsResult = new(fileStream, MimeType)
                     {
                         EnableRangeProcessing = true,
                         FileDownloadName = Path.GetFileName(thisFile.FullName)
@@ -84,7 +73,7 @@ namespace Penguin.Cms.Modules.Files.Controllers
             }
             else
             {
-                return this.File(thisFile.Data, MimeType, thisFile.FileName);
+                return File(thisFile.Data, MimeType, thisFile.FileName);
             }
         }
     }

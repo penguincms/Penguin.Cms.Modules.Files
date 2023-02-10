@@ -16,7 +16,7 @@ namespace Penguin.Cms.Modules.Files.Areas.Admin.Models
 
         public FileBrowserPageModel(IEnumerable<DatabaseFile> files)
         {
-            this.Files = files.ToList();
+            Files = files.ToList();
         }
     }
 }
