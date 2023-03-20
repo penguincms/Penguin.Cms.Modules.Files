@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\**\*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.4" />
     <ProjectReference Include="..\Penguin.Auditing.Abstractions\Penguin.Auditing.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Cms.Abstractions\Penguin.Cms.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Cms.Core\Penguin.Cms.Core.Local.csproj" />
