@@ -6,6 +6,7 @@ using Penguin.Files.Services;
 using Penguin.Web.Data;
 using System;
 using System.IO;
+using Loxifi;
 
 namespace Penguin.Cms.Modules.Files.Controllers
 {
