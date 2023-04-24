@@ -62,7 +62,6 @@
     <ProjectReference Include="..\Penguin.SystemExtensions.Abstractions\Penguin.SystemExtensions.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Templating.Abstractions\Penguin.Templating.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Testing\Penguin.Testing.Local.csproj" />
-    <ProjectReference Include="..\Penguin.Threading.BackgroundWorker\Penguin.Threading.BackgroundWorker.Local.csproj" />
     <ProjectReference Include="..\Penguin.Web.Abstractions\Penguin.Web.Abstractions.Local.csproj" />
     <ProjectReference Include="..\Penguin.Web.Data\Penguin.Web.Data.Local.csproj" />
     <ProjectReference Include="..\Penguin.Web.DependencyInjection\Penguin.Web.DependencyInjection.Local.csproj" />
